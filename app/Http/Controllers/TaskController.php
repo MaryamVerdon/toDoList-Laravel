@@ -35,14 +35,15 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'title' => 'required|max:100',
             'detail' => 'required|max:500',
         ]);
-        $task = new Task;
-        $task->title = $request->title;
-        $task->detail = $request->detail;
-        $task->save();
+        //$task = new Task;
+        //$task->title = $request->title;
+        //$task->detail = $request->detail;
+        //$task->save();
+        Task::create($request->all());
         return back()->with('message', "La tâche a bien été créée !");
     }
 
@@ -60,12 +61,12 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Task $task
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Task $task)
     {
-        //
+        return view('tasks.edit', compact('task'));
     }
 
     /**
