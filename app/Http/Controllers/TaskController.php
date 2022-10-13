@@ -73,12 +73,20 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Task $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Task $task)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:100',
+            'detail' => 'required|max:500',
+        ]);
+        $task->title = $request->title;
+        $task->detail = $request->detail;
+        $task->state = $request->has('state');
+        $task->save();
+        return back()->with('message', "La tâche a bien été modifiée !");
     }
 
     /**
