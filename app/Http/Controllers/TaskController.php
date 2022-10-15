@@ -36,15 +36,17 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|max:100',
             'detail' => 'required|max:500',
         ]);
+
+        $request->user()->tasks()->create($validated);
         //$task = new Task;
         //$task->title = $request->title;
         //$task->detail = $request->detail;
         //$task->save();
-        Task::create($request->all());
+        //Task::create($request->all());
         return back()->with('message', "La tâche a bien été créée !");
     }
 
@@ -67,6 +69,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
+        $this->authorize('update', $task);
         return view('tasks.edit', compact('task'));
     }
 
@@ -79,14 +82,16 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $request->validate([
+        $this->authorize('update', $task);
+        $validated = $request->validate([
             'title' => 'required|max:100',
             'detail' => 'required|max:500',
         ]);
-        $task->title = $request->title;
-        $task->detail = $request->detail;
+        //$task->title = $request->title;
+        //$task->detail = $request->detail;
         $task->state = $request->has('state');
-        $task->save();
+        //$task->save();
+        $task->update($validated);
         return back()->with('message', "La tâche a bien été modifiée !");
     }
 
@@ -98,6 +103,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+        $this->authorize('delete', $task);
         $task->delete();
         return back()->with("message", "Tâche supprimée ! ");
     }

@@ -34,16 +34,19 @@
                         <x-link-button href="{{ route('tasks.show', $task->id) }}">
                             @lang('Show')
                         </x-link-button>
-                        <x-link-button href="{{ route('tasks.edit', $task->id) }}">
-                            @lang('edit')
-                        </x-link-button>
-                        <x-link-button onclick="event.preventDefault(); document.getElementById('destroy{{ $task->id }}').submit();">
-                            @lang('Delete')
-                        </x-link-button>
-                        <form id="destroy{{ $task->id }}" action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display: none;">
-                            @csrf
-                            @method('DELETE')
-                        </form>
+                        @if ($task->user->is(auth()->user()))
+                          <x-link-button href="{{ route('tasks.edit', $task->id) }}">
+                              @lang('edit')
+                          </x-link-button>
+                          
+                          <x-link-button onclick="event.preventDefault(); document.getElementById('destroy{{ $task->id }}').submit();">
+                              @lang('Delete')
+                          </x-link-button>
+                          <form id="destroy{{ $task->id }}" action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display: none;">
+                              @csrf
+                              @method('DELETE')
+                          </form>
+                        @endif
                       </tr>
                     @endforeach
                   </tbody>
